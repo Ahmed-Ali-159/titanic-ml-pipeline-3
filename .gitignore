@@ -1,10 +1,16 @@
+# Data
 data/raw/
 data/processed/
-models/*.pkl
+
+# Models
+models/
+*.pkl
+
+# Secrets
 .env
+
+# Virtual environment
 .venv/
-
-
 
 ###############################
 
