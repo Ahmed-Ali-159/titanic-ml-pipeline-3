@@ -2,11 +2,6 @@ from src.data_loader import load_data, split_features_target
 from src.evaluate import evaluate_models
 from src.train import build_models, train_and_save
 
-# import yaml
-
-# with open("configs/config.yaml", "r") as f:
-#     config = yaml.safe_load(f)
-
 from src.config import config
 
 
