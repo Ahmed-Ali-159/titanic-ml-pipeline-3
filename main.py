@@ -2,15 +2,22 @@ from src.data_loader import load_data, split_features_target
 from src.evaluate import evaluate_models
 from src.train import build_models, train_and_save
 
+# import yaml
+
+# with open("configs/config.yaml", "r") as f:
+#     config = yaml.safe_load(f)
+
+from src.config import config
+
 
 def main() -> None:
 
     # Loading data
     print("=== Loading Data ===")
-    train_df, _ = load_data("data/raw/train.csv", "data/raw/test.csv")
+    train_df, _ = load_data(config["data"]["train_path"], config["data"]["test_path"])
 
     # Split data into train, and validation sets
-    X_train, X_val, y_train, y_val = split_features_target(df=train_df, target_col="Survived")
+    X_train, X_val, y_train, y_val = split_features_target(df=train_df, target_col=config["preprocessing"]["target_column"])
 
     # Train models and save them to disk
     print("\n=== Training Models ===")

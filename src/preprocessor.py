@@ -3,22 +3,29 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
+# import yaml
+
+# with open("configs/config.yaml", "r") as f:
+#     config = yaml.safe_load(f)
+
+from src.config import config
+
 
 def build_preprocessor() -> ColumnTransformer:
-    numeric_features = ["Age", "Fare", "SibSp", "Parch"]
-    categorical_features = ["Sex", "Embarked", "Pclass"]
+    numeric_features = config["preprocessing"]["numerical_features"]
+    categorical_features = config["preprocessing"]["categorical_features"]
 
     numeric_pipeline = Pipeline(
         [
-            ("imputer", SimpleImputer(strategy="median")),
-            ("scaler", StandardScaler()),
+            ("imputer", SimpleImputer(strategy=config["preprocessing"]["numerical_pipeline"]["imputer_strategy"])),
+            ("scaler", config["preprocessing"]["numerical_pipeline"]["scaler"]()),
         ]
     )
 
     categorical_pipeline = Pipeline(
         [
-            ("imputer", SimpleImputer(strategy="most_frequent")),
-            ("encoder", OneHotEncoder(handle_unknown="ignore")),
+            ("imputer", SimpleImputer(strategy=config["preprocessing"]["categorical_pipeline"]["imputer_strategy"], fill_value="missing")),
+            ("encoder", config["preprocessing"]["categorical_pipeline"]["encoder"])
         ]
     )
 

@@ -1,0 +1,41 @@
+random_state: 42
+
+data:
+  train_path: data/raw/train.csv
+  test_path: data/raw/test.csv
+
+preprocessing:
+  columns_to_drop:
+    - PassengerId
+    - Name
+    - Ticket
+    - Cabin
+    - Survived
+  target_col: Survived
+  numerical_features:
+    - Age
+    - Fare
+    - SibSp
+    - Parch
+  categorical_features:
+    - Pclass
+    - Sex
+    - Embarked
+  numerical_pipeline:
+    imputer_strategy: median
+    scaler: StandardScaler
+  categorical_pipeline:
+    imputer_strategy: most_frequent
+    encoder: OneHotEncoder(handle_unknown="ignore")
+
+models:
+  logistic_regression:
+    max_iter: 1000
+
+  random_forest:
+    n_estimators: 100
+
+
+training:
+  test_size: 0.2
+  output_dir: models/
