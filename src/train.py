@@ -7,47 +7,37 @@ from sklearn.pipeline import Pipeline
 
 from src.preprocessor import build_preprocessor
 
-# import yaml
+# from src.config import config
 
-# with open("configs/config.yaml", "r") as f:
-#     config = yaml.safe_load(f)
+from omegaconf import OmegaConf
 
-from src.config import config
 
 MODEL_REGISTRY = {
     "logistic_regression": LogisticRegression,
     "random_forest": RandomForestClassifier,
 }
 
-def build_model() -> dict:
-    preprocessor = build_preprocessor()
+def build_model(cfg):
+    preprocessor = build_preprocessor(cfg)
 
-    model_name = config["model"]["active_model"]
+    model_name = cfg.model.name
 
     model_class = MODEL_REGISTRY[model_name]
 
-    model_params = config["model"][model_name]
+    # model_params = cfg.model[model_name]
+    # model_params = {
+    #     k: v
+    #     for k, v in cfg.model.items()
+    #     if k != "name"
+    # }
+
+    model_params = {k: v for k, v in OmegaConf.to_container(cfg.model).items() if k != "name"}
 
     # Equivalent to: LogisticRegression(max_iter=1000, random_state=42) or RandomForestClassifier(n_estimators=100, random_state=42)
     classifier = model_class(
         **model_params,
-        random_state=config["random_state"]
+        random_state=cfg.random_state
     )
-
-    # return {
-    #     "logistic_regression": Pipeline(
-    #         [
-    #             ("preprocessor", preprocessor),
-    #             ("classifier", LogisticRegression(max_iter=config["models"]["logistic_regression"]["max_iter"], random_state=config["random_state"])),
-    #         ]
-    #     ),
-    #     "random_forest": Pipeline(
-    #         [
-    #             ("preprocessor", preprocessor),
-    #             ("classifier", RandomForestClassifier(n_estimators=config["models"]["random_forest"]["n_estimators"], random_state=config["random_state"]))
-    #         ]
-    #     )
-    # }
 
     pipeline = Pipeline(
         [
@@ -59,21 +49,12 @@ def build_model() -> dict:
     return model_name, pipeline
 
 
-def train_and_save(model_name: str, pipeline: Pipeline, X_train, y_train):
+def train_and_save(cfg, model_name: str, pipeline: Pipeline, X_train, y_train):
     
     # Ensure output directory exists
-    output_dir = config["training"]["output_dir"]
+    # output_dir = config["training"]["output_dir"]
+    output_dir = cfg.training.output_dir
     os.makedirs(output_dir, exist_ok=True)
-
-    # Train each model and save to disk
-    # trained = {}
-    # for name, pipeline in models.items():
-    #     pipeline.fit(X_train, y_train)
-    #     path = f"{output_dir}{name}.pkl"
-    #     joblib.dump(pipeline, path)
-    #     print(f"[✓] Saved {name} → {path}")
-    #     trained[name] = pipeline
-    # return trained
 
     # Train the model
     pipeline.fit(X_train, y_train)

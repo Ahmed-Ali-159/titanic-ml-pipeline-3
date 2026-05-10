@@ -1,43 +1,57 @@
+defaults:
+  - model: random_forest
+  - training: default
+  - preprocessing: default
+  - data: default
+  - _self_
+
 random_state: 42
 
-data:
-  train_path: data/raw/train.csv
-  test_path: data/raw/test.csv
-
-preprocessing:
-  columns_to_drop:
-    - PassengerId
-    - Name
-    - Ticket
-    - Cabin
-    - Survived
-  target_col: Survived
-  numerical_features:
-    - Age
-    - Fare
-    - SibSp
-    - Parch
-  categorical_features:
-    - Pclass
-    - Sex
-    - Embarked
-  numerical_pipeline:
-    imputer_strategy: median
-    scaler: standard
-  categorical_pipeline:
-    imputer_strategy: constant
-    encoder: onehot
-
-model:
-  active_model: random_forest
-
-  logistic_regression:
-    max_iter: 1000
-
-  random_forest:
-    n_estimators: 100
+hydra:
+  job:
+    chdir: false
 
 
-training:
-  test_size: 0.2
-  output_dir: models/
+# random_state: 42
+
+# data:
+#   train_path: data/raw/train.csv
+#   test_path: data/raw/test.csv
+
+# preprocessing:
+#   columns_to_drop:
+#     - PassengerId
+#     - Name
+#     - Ticket
+#     - Cabin
+#     - Survived
+#   target_col: Survived
+#   numerical_features:
+#     - Age
+#     - Fare
+#     - SibSp
+#     - Parch
+#   categorical_features:
+#     - Pclass
+#     - Sex
+#     - Embarked
+#   numerical_pipeline:
+#     imputer_strategy: median
+#     scaler: standard
+#   categorical_pipeline:
+#     imputer_strategy: constant
+#     encoder: onehot
+
+# model:
+#   active_model: random_forest
+
+#   logistic_regression:
+#     max_iter: 1000
+
+#   random_forest:
+#     n_estimators: 100
+
+
+# training:
+#   test_size: 0.2
+#   output_dir: models/
