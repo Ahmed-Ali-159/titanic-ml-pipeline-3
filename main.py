@@ -2,17 +2,30 @@ from src.data_loader import load_data, split_features_target
 from src.evaluate import evaluate_model
 from src.train import build_model, train_and_save
 
-from src.config import config
+import hydra
+from omegaconf import DictConfig
+
+@hydra.main(
+    version_base=None,
+    # config_path="../configs",
+    config_path="configs",
+    config_name="config"
+)
 
 
-def main() -> None:
+def main(cfg: DictConfig) -> None:
 
     # Loading data
     print("=== Loading Data ===")
-    train_df, _ = load_data(config["data"]["train_path"], config["data"]["test_path"])
+    # train_df, _ = load_data(config["data"]["train_path"], config["data"]["test_path"])
+    train_df, _ = load_data(
+        cfg.data.train_path,
+        cfg.data.test_path
+    )
 
     # Split data into train, and validation sets
-    X_train, X_val, y_train, y_val = split_features_target(df=train_df, target_col=config["preprocessing"]["target_col"])
+    # X_train, X_val, y_train, y_val = split_features_target(df=train_df, target_col=config["preprocessing"]["target_col"])
+    X_train, X_val, y_train, y_val = split_features_target(cfg=cfg, df=train_df, target_col=cfg.preprocessing.target_col)
 
     # # Train models and save them to disk
     # print("\n=== Training Models ===")
@@ -25,8 +38,10 @@ def main() -> None:
 
      # Train models and save them to disk
     print("\n=== Training Model ===")
-    model_name, pipeline = build_model()
-    trained_pipeline = train_and_save(model_name, pipeline, X_train, y_train)
+    
+    # model_name, pipeline = build_model()
+    model_name, pipeline = build_model(cfg)
+    trained_pipeline = train_and_save(cfg=cfg, model_name=model_name, pipeline=pipeline, X_train=X_train, y_train=y_train)
 
     # Evaluate models on validation set
     print("\n=== Evaluating Model ===")
