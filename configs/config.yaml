@@ -23,12 +23,14 @@ preprocessing:
     - Embarked
   numerical_pipeline:
     imputer_strategy: median
-    scaler: StandardScaler
+    scaler: standard
   categorical_pipeline:
-    imputer_strategy: most_frequent
-    encoder: OneHotEncoder(handle_unknown="ignore")
+    imputer_strategy: constant
+    encoder: onehot
 
-models:
+model:
+  active_model: random_forest
+
   logistic_regression:
     max_iter: 1000
 
