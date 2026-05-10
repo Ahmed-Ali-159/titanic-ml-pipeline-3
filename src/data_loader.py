@@ -1,11 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-# import yaml
-
-# with open("configs/config.yaml", "r") as f:
-#     config = yaml.safe_load(f)
-
 from src.config import config
 
 def load_data(train_path: str, test_path: str) -> tuple[pd.DataFrame, pd.DataFrame]:
