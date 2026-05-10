@@ -1,0 +1,4 @@
+[core]
+    remote = origin
+['remote "origin"']
+    url = https://dagshub.com/ahmaad.alii.213/titanic-ml-pipeline-3.dvc

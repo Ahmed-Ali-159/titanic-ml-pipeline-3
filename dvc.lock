@@ -1,0 +1,44 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: uv run python main.py
+    deps:
+    - path: configs/
+      hash: md5
+      md5: 0cb7942c70ff175b65c601dbdddc96c3.dir
+      size: 1508
+      nfiles: 6
+    - path: data/raw/test.csv
+      hash: md5
+      md5: 7533b82eae4b582610cbd68aa636b017
+      size: 28629
+    - path: data/raw/train.csv
+      hash: md5
+      md5: 2309cc5f04782ed9bb6016d9f4e381cf
+      size: 61194
+    - path: main.py
+      hash: md5
+      md5: 221f1dc2f5259f3736a68821873eba8b
+      size: 1723
+    - path: src/
+      hash: md5
+      md5: a30003f0198b46086004c5799d15bd0b.dir
+      size: 14130
+      nfiles: 13
+    params:
+      configs/config.yaml:
+        random_state: 42
+      configs/model/random_forest.yaml:
+        n_estimators: 100
+      configs/training/default.yaml:
+        test_size: 0.2
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: 2d7de2eb9cc31b74a95dd78cba9549ad
+      size: 18
+    - path: models/
+      hash: md5
+      md5: f692da9d3e2bdf5dfe542cddcf4f3ef4.dir
+      size: 2415387
+      nfiles: 1
