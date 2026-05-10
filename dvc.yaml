@@ -1,0 +1,21 @@
+stages:
+  train:
+    cmd: uv run python main.py
+    deps:
+      - main.py
+      - src/
+      - data/raw/train.csv
+      - data/raw/test.csv
+      - configs/
+    params:
+      - configs/config.yaml:
+          - random_state
+      - configs/model/random_forest.yaml:
+          - n_estimators
+      - configs/training/default.yaml:
+          - test_size
+    outs:
+      - models/
+    metrics:
+      - metrics.json:
+          cache: false

@@ -1,9 +1,15 @@
 # Hydra
 output/
 
-# Data
-data/raw/
-data/processed/
+# # Data
+# data/raw/
+# data/processed/
+
+# Data (DVC-tracked)
+data/raw/*
+data/processed/*
+!data/raw/*.dvc
+!data/processed/*.dvc
 
 # Models
 models/
@@ -235,3 +241,4 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+/models
