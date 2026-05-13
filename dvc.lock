@@ -18,12 +18,12 @@ stages:
       size: 61194
     - path: main.py
       hash: md5
-      md5: 221f1dc2f5259f3736a68821873eba8b
-      size: 1723
+      md5: c16b81b2856ffe405a220993ecd51fa5
+      size: 2184
     - path: src/
       hash: md5
-      md5: a30003f0198b46086004c5799d15bd0b.dir
-      size: 14130
+      md5: 1ca832bb2ca053d76d943ca91ef122ad.dir
+      size: 16662
       nfiles: 13
     params:
       configs/config.yaml:
