@@ -68,10 +68,16 @@ def train_and_save(cfg, model_name: str, pipeline: Pipeline, X_train, y_train):
 
     # with mlflow.start_run():
     with mlflow.start_run() as run:
-        # Log params
+        # Model params
         mlflow.log_params({k: v for k, v in OmegaConf.to_container(cfg.model).items() if k != "name"})
         mlflow.log_param("random_state", cfg.random_state)
         mlflow.log_param("test_size", cfg.training.test_size)
+
+        # Preprocessing params
+        mlflow.log_param("num_imputer_strategy", cfg.preprocessing.numerical_pipeline.imputer_strategy)
+        mlflow.log_param("scaler", cfg.preprocessing.numerical_pipeline.scaler)
+        mlflow.log_param("cat_imputer_strategy", cfg.preprocessing.categorical_pipeline.imputer_strategy)
+        mlflow.log_param("encoder", cfg.preprocessing.categorical_pipeline.encoder)
 
         # Train
         pipeline.fit(X_train, y_train)
