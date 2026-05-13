@@ -11,6 +11,9 @@ from src.preprocessor import build_preprocessor
 
 from omegaconf import OmegaConf
 
+import mlflow
+import mlflow.sklearn
+
 
 MODEL_REGISTRY = {
     "logistic_regression": LogisticRegression,
@@ -56,9 +59,36 @@ def train_and_save(cfg, model_name: str, pipeline: Pipeline, X_train, y_train):
     output_dir = cfg.training.output_dir
     os.makedirs(output_dir, exist_ok=True)
 
-    # Train the model
-    pipeline.fit(X_train, y_train)
-    path = f"{output_dir}{model_name}.pkl"
-    joblib.dump(pipeline, path)
-    print(f"[✓] Saved {model_name} → {path}")
-    return pipeline
+    # # Train the model
+    # pipeline.fit(X_train, y_train)
+    # path = f"{output_dir}{model_name}.pkl"
+    # joblib.dump(pipeline, path)
+    # print(f"[✓] Saved {model_name} → {path}")
+    # return pipeline
+
+    # with mlflow.start_run():
+    with mlflow.start_run() as run:
+        # Model params
+        mlflow.log_params({k: v for k, v in OmegaConf.to_container(cfg.model).items() if k != "name"})
+        mlflow.log_param("random_state", cfg.random_state)
+        mlflow.log_param("test_size", cfg.training.test_size)
+
+        # Preprocessing params
+        mlflow.log_param("num_imputer_strategy", cfg.preprocessing.numerical_pipeline.imputer_strategy)
+        mlflow.log_param("scaler", cfg.preprocessing.numerical_pipeline.scaler)
+        mlflow.log_param("cat_imputer_strategy", cfg.preprocessing.categorical_pipeline.imputer_strategy)
+        mlflow.log_param("encoder", cfg.preprocessing.categorical_pipeline.encoder)
+
+        # Train
+        pipeline.fit(X_train, y_train)
+
+        # Log model
+        mlflow.sklearn.log_model(pipeline, artifact_path=model_name)
+
+        # Save locally too
+        path = os.path.join(output_dir, f"{model_name}.pkl")
+        joblib.dump(pipeline, path)
+        print(f"[✓] Saved {model_name} → {path}")
+
+    # return pipeline
+        return pipeline, run.info.run_id
